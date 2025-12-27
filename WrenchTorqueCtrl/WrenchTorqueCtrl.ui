@@ -1,18 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
 <ui version="4.0">
  <class>WrenchTorqueCtrlClass</class>
  <widget class="QMainWindow" name="WrenchTorqueCtrlClass">
   <property name="geometry">
-=======
-<UI version="4.0" >
- <class>WrenchTorqueCtrlClass</class>
- <widget class="QMainWindow" name="WrenchTorqueCtrlClass" >
-  <property name="objectName" >
-   <string notr="true">WrenchTorqueCtrlClass</string>
-  </property>
-  <property name="geometry" >
->>>>>>> a0a3917b59e2dbc465eba3b1aa03b7b96d732435
    <rect>
     <x>0</x>
     <y>0</y>
@@ -20,7 +10,6 @@
     <height>400</height>
    </rect>
   </property>
-<<<<<<< HEAD
   <property name="windowTitle">
    <string>WrenchTorqueCtrl</string>
   </property>
@@ -69,23 +58,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="WrenchTorqueCtrl.qrc"/>
- </resources>
- <connections/>
-</ui>
-=======
-  <property name="windowTitle" >
-   <string>WrenchTorqueCtrl</string>
-  </property>  <widget class="QMenuBar" name="menuBar" />
-  <widget class="QToolBar" name="mainToolBar" />
-  <widget class="QWidget" name="centralWidget" />
-  <widget class="QStatusBar" name="statusBar" />
- </widget>
- <layoutDefault spacing="6" margin="11" />
- <pixmapfunction></pixmapfunction>
- <resources>
    <include location="WrenchTorqueCtrl.qrc"/>
  </resources>
  <connections/>
-</UI>
->>>>>>> a0a3917b59e2dbc465eba3b1aa03b7b96d732435
+</ui>

@@ -21,12 +21,9 @@
       <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
       <Extensions>ts</Extensions>
     </Filter>
-<<<<<<< HEAD
     <Filter Include="XmlConfigManager">
       <UniqueIdentifier>{05b490f4-18f6-40fd-bab4-dab6ca4b333d}</UniqueIdentifier>
     </Filter>
-=======
->>>>>>> a0a3917b59e2dbc465eba3b1aa03b7b96d732435
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="WrenchTorqueCtrl.qrc">
@@ -41,7 +38,6 @@
     <ClCompile Include="WrenchTorqueCtrl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-<<<<<<< HEAD
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -76,16 +72,3 @@
     </QtUic>
   </ItemGroup>
 </Project>
-=======
-    <ResourceCompile Include="$pro_name$.rc">
-    </ResourceCompile>
-    <None Include="$pro_name$.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="$pro_name$.def">
-      <Filter>Resource Files</Filter>
-    </None>
-
-  </ItemGroup>
-</Project>
->>>>>>> a0a3917b59e2dbc465eba3b1aa03b7b96d732435

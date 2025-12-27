@@ -1,12 +1,7 @@
 <RCC>
-<<<<<<< HEAD
   <qresource prefix="Ico">
     <file>qrc/设置.png</file>
     <file>qrc/上拉.png</file>
     <file>qrc/下拉.png</file>
-  </qresource>
-=======
-    <qresource prefix="WrenchTorqueCtrl">
     </qresource>
->>>>>>> a0a3917b59e2dbc465eba3b1aa03b7b96d732435
 </RCC>
