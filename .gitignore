@@ -5,3 +5,4 @@
 /.vs/WrenchTorqueCtrl
 /x64/Release/WrenchTorqueCtrl.exe
 /WrenchTorqueCtrl/x64/Release
+/HttpJsonSender/x64/Release
