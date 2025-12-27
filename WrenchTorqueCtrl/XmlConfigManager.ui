@@ -268,29 +268,6 @@ QTableWidget QDoubleSpinBox::down-arrow {
     height: 8px;
 }
 
-
-QTableWidget QComboBox {
-	background - color: #ffffff;
-	border: 1px solid #d0d6e0;
-	border - radius: 3px;
-	padding: 4px 8px;
-	color: #333842;
-}
-
-QTableWidget QComboBox:hover {
-	border - color: #a0b3dc;
-}
-
-QTableWidget QComboBox::drop - down {
-	border - left: 1px solid #d0d6e0;
-	border - radius: 0 3px 3px 0;
-}
-
-QTableWidget QComboBox::down - arrow {
-	image: url(: / icons / arrow - down.svg); /* 可替换为自己的箭头图标 */
-	width: 12px;
-	height: 12px;
-}
 </string>
       </property>
      </widget>
@@ -349,7 +326,7 @@ QPushButton#cancelBtn:hover {
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="cancelBtn">
        <property name="styleSheet">
         <string notr="true">/* 按钮样式 */
 QPushButton {

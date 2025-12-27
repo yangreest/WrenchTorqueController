@@ -46,7 +46,7 @@ void XmlManagerWindow::initTable(ConfigDataMap mm)
 	ui.tableWidget->setColumnCount(2);
 	ui.tableWidget->setHorizontalHeaderLabels(QStringList() << "参数名" << "参数值");
 	// table 拉伸策略
-    ui.tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+	ui.tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
 	ui.tableWidget->setRowCount(mm.size());
 	int row = 0;
@@ -61,9 +61,18 @@ void XmlManagerWindow::initTable(ConfigDataMap mm)
 		// 根据 it->second.m_eDataType 判断第二列使用文本框还是下拉框
 		switch (it->second.m_eDataType)
 		{
+		case ConfigDataItem::DataType::eBool:
+		{
+			QCheckBox* ckBox = new QCheckBox(ui.tableWidget);
+			ckBox->setEnabled(true);
+			ckBox->setChecked(it->second.m_strValue.toInt() == 0 ? true : false);
+			ui.tableWidget->setCellWidget(row, 1, ckBox);
+			break;
+		}
 		case ConfigDataItem::DataType::eInt:
 		{
 			QSpinBox* spinBox = new QSpinBox(ui.tableWidget);
+			spinBox->setRange(it->second.m_strRange.split("-")[0].toInt(), it->second.m_strRange.split("-")[1].toInt());
 			spinBox->setValue(it->second.m_strValue.toInt());
 			// 2. 创建水平布局（控制水平对齐）+ 垂直居中（默认）
 			//QHBoxLayout* layout = new QHBoxLayout(spinBox);
@@ -93,10 +102,9 @@ void XmlManagerWindow::initTable(ConfigDataMap mm)
 		case ConfigDataItem::DataType::eSelection:
 		{
 			QComboBox* comboBox = new QComboBox(ui.tableWidget);
-
-			comboBox->addItem("true");
-			comboBox->addItem("false");
-			comboBox->setCurrentText(it->second.m_strValue);
+			QStringList strList = it->second.m_strRange.split("-");
+			comboBox->addItems(strList);
+			comboBox->setCurrentIndex(it->second.m_strValue.toInt());
 			ui.tableWidget->setCellWidget(row, 1, comboBox);
 			break;
 		}
@@ -111,13 +119,6 @@ void XmlManagerWindow::initTable(ConfigDataMap mm)
 			lineEdit->setValidator(validator);
 			lineEdit->setText(it->second.m_strValue);
 			ui.tableWidget->setCellWidget(row, 1, lineEdit);
-			break;
-		}
-		case ConfigDataItem::DataType::eBool:
-		{
-			QCheckBox* ckBox = new QCheckBox(ui.tableWidget);
-			ckBox->setChecked(it->second.m_strValue == "true");
-			ui.tableWidget->setCellWidget(row, 1, ckBox);
 			break;
 		}
 		default:
