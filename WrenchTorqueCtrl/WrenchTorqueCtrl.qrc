@@ -1,3 +1,7 @@
 <RCC>
-  <qresource prefix="Ico"/>
+  <qresource prefix="Ico">
+    <file>qrc/设置.png</file>
+    <file>qrc/上拉.png</file>
+    <file>qrc/下拉.png</file>
+  </qresource>
 </RCC>

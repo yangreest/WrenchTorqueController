@@ -33,7 +33,7 @@
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
+    <enum>LeftToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
@@ -47,6 +47,10 @@
    </property>
   </action>
   <action name="actionSetting">
+   <property name="icon">
+    <iconset resource="WrenchTorqueCtrl.qrc">
+     <normaloff>:/Ico/qrc/设置.png</normaloff>:/Ico/qrc/设置.png</iconset>
+   </property>
    <property name="text">
     <string>Setting</string>
    </property>

@@ -1,0 +1,156 @@
+/* 表格基础样式（修改） */
+QTableWidget {
+    background-color: #ffffff;
+    border: 1px solid #d0d6e0;
+    border-radius: 4px;
+    gridline-color: #e5e9f2;
+    selection-background-color: #e6f0ff;
+    selection-color: #1e6ceb;
+    /* 取消表格默认内边距 */
+    padding: 0; 
+}
+
+/* 表格单元格（修改） */
+QTableWidget::item {
+    padding: 0px; /* 单元格内边距设为0，让控件完全填充 */
+    color: #333842;
+    border: none;
+}
+
+/* 表格内数字输入框（修改：填充单元格） */
+QTableWidget QSpinBox,
+QTableWidget QDoubleSpinBox {
+    background-color: #ffffff;
+    border: 1px solid #d0d6e0;
+    border-radius: 0; /* 取消圆角，避免和单元格边缘冲突 */
+    padding: 4px 8px;
+    color: #333842;
+    font-size: 12px;
+    outline: none;
+    /* 让输入框填满单元格 */
+    min-width: 100%; 
+    min-height: 100%;
+    margin: 0; /* 取消外边距 */
+}
+
+/* 表格内复选框（修改：填充单元格） */
+QTableWidget QCheckBox {
+    spacing: 6px;
+    /* 让复选框在单元格内居中且填满 */
+    min-width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 6px; /* 内部留一点边距，避免贴边 */
+}
+
+/* 表格内下拉框（补充：填充单元格） */
+QTableWidget QComboBox {
+    background-color: #ffffff;
+    border: 1px solid #d0d6e0;
+    border-radius: 0;
+    padding: 4px 8px;
+    color: #333842;
+    font-size: 12px;
+    min-width: 100%;
+    min-height: 100%;
+    margin: 0;
+}
+
+
+/* 表格（参数配置区域）样式 */
+QTableWidget {
+    background-color: #ffffff;
+    border: 1px solid #d0d6e0;
+    border-radius: 4px;
+    gridline-color: #e5e9f2;
+}
+QTableWidget::item {
+    padding: 6px 8px;
+    color: #333842;
+}
+QTableWidget::item:selected {
+    background-color: #e6f0ff;
+    color: #1e6ceb;
+}
+QHeaderView::section {
+    background-color: #f0f3f8;
+    color: #555a64;
+    padding: 8px;
+    border: 1px solid #d0d6e0;
+}
+
+/* ========== 表格内数字输入框（QSpinBox/QDoubleSpinBox） ========== */
+QTableWidget QSpinBox,
+QTableWidget QDoubleSpinBox {
+    background-color: #ffffff;
+    border: 1px solid #d0d6e0;
+    border-radius: 3px;
+    padding: 4px 8px;
+    color: #333842;
+    font-size: 12px;
+    outline: none;
+    min-height: 28px; /* 适配单元格高度 */
+}
+/* 悬浮状态 */
+QTableWidget QSpinBox:hover,
+QTableWidget QDoubleSpinBox:hover {
+    border-color: #a0b3dc;
+}
+/* 聚焦状态 */
+QTableWidget QSpinBox:focus,
+QTableWidget QDoubleSpinBox:focus {
+    border-color: #1e6ceb;
+    box-shadow: 0 0 0 2px rgba(30, 108, 235, 0.1);
+}
+/* 上下箭头按钮 */
+QTableWidget QSpinBox::up-button,
+QTableWidget QDoubleSpinBox::up-button {
+    width: 20px;
+    border-left: 1px solid #e5e9f2;
+    background-color: #f8f9fc;
+}
+QTableWidget QSpinBox::down-button,
+QTableWidget QDoubleSpinBox::down-button {
+    width: 20px;
+    border-left: 1px solid #e5e9f2;
+    background-color: #f8f9fc;
+}
+/* 箭头图标 */
+QTableWidget QSpinBox::up-arrow,
+QTableWidget QDoubleSpinBox::up-arrow {
+    image: url(:/icons/arrow-up-small.svg);
+    width: 8px;
+    height: 8px;
+}
+QTableWidget QSpinBox::down-arrow,
+QTableWidget QDoubleSpinBox::down-arrow {
+    image: url(:/icons/arrow-down-small.svg);
+    width: 8px;
+    height: 8px;
+}
+
+
+QTableWidget QComboBox {
+	background - color: #ffffff;
+	border: 1px solid #d0d6e0;
+	border - radius: 3px;
+	padding: 4px 8px;
+	color: #333842;
+}
+
+QTableWidget QComboBox:hover {
+	border - color: #a0b3dc;
+}
+
+QTableWidget QComboBox::drop - down {
+	border - left: 1px solid #d0d6e0;
+	border - radius: 0 3px 3px 0;
+}
+
+QTableWidget QComboBox::down - arrow {
+	image: url(: / icons / arrow - down.svg); /* 可替换为自己的箭头图标 */
+	width: 12px;
+	height: 12px;
+}
+
+

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Config>
-    <DeviceControlBoard>
-        <Ip>127.0.0.1</Ip>
+    <DeviceControlBoard name = "设备控制板">
+        <Ip name = "设备控制板" >127.0.0.1</Ip>
         <Port>8234</Port>
         <!-- 心跳间隔单位ms -->
         <DeviceHeartBeat>200</DeviceHeartBeat>

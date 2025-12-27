@@ -13,6 +13,32 @@
   <property name="windowTitle">
    <string>SettingWidget</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #f5f7fa;
+
+/* 按钮样式 */
+QPushButton {
+    background-color: #1e6ceb;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 12px;
+}
+QPushButton:hover {
+    background-color: #1859c0;
+}
+QPushButton:pressed {
+    background-color: #134aa5;
+}
+QPushButton#cancelBtn { /* 取消按钮可单独设置 */
+    background-color: #f0f3f8;
+    color: #555a64;
+}
+QPushButton#cancelBtn:hover {
+    background-color: #e5e9f2;
+}</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
     <number>2</number>
@@ -75,8 +101,88 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="styleSheet">
+           <string notr="true">/* ========== 新增/优化：QListWidget 样式 ========== */
+QListWidget {
+    background-color: #ffffff;
+    border: 1px solid #d0d6e0;
+    border-radius: 4px;
+    padding: 4px;
+    color: #333842;
+    outline: none; /* 去除选中时的虚线框 */
+}
+
+/* 列表项基础样式 */
+QListWidget::item {
+    padding: 8px 10px;
+    border-radius: 3px;
+    margin: 2px 0;
+}
+
+/* 列表项悬浮效果 */
+QListWidget::item:hover {
+    background-color: #e6f0ff;
+}
+
+/* 列表项选中效果 */
+QListWidget::item:selected {
+    background-color: #1e6ceb;
+    color: #ffffff;
+}
+
+/* 列表项禁用效果（如需） */
+QListWidget::item:disabled {
+    color: #a0a6b3;
+    background-color: #f8f9fc;
+}</string>
+          </property>
          </widget>
-         <widget class="QTextEdit" name="textEdit"/>
+         <widget class="QTextEdit" name="textEdit">
+          <property name="styleSheet">
+           <string notr="true">/* ========== 新增/优化：QTextEdit 样式 ========== */
+QTextEdit {
+    background-color: #ffffff;
+    border: 1px solid #d0d6e0;
+    border-radius: 4px;
+    padding: 8px 10px;
+    color: #333842;
+    font-size: 12px;
+    line-height: 1.4;
+    outline: none; /* 去除聚焦虚线框 */
+}
+
+/* 文本框悬浮效果 */
+QTextEdit:hover {
+    border-color: #a0b3dc;
+}
+
+/* 文本框聚焦效果 */
+QTextEdit:focus {
+    border-color: #1e6ceb;
+    box-shadow: 0 0 0 2px rgba(30, 108, 235, 0.1); /* 柔和的聚焦阴影 */
+}
+
+/* 只读状态的文本框（如需） */
+QTextEdit[readOnly=&quot;true&quot;] {
+    background-color: #f8f9fc;
+    color: #555a64;
+    border-color: #e5e9f2;
+}</string>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="html">
+           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Microsoft YaHei UI'; font-size:12px; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
         </widget>
        </item>
       </layout>
@@ -87,6 +193,105 @@
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">
+/* 表格（参数配置区域）样式 */
+QTableWidget {
+    background-color: #ffffff;
+    border: 1px solid #d0d6e0;
+    border-radius: 4px;
+    gridline-color: #e5e9f2;
+}
+QTableWidget::item {
+    /*padding: 6px 8px;*/
+    color: #333842;
+}
+QTableWidget::item:selected {
+    background-color: #e6f0ff;
+    color: #1e6ceb;
+}
+QHeaderView::section {
+    background-color: #f0f3f8;
+    color: #555a64;
+    /*padding: 8px;*/
+    border: 1px solid #d0d6e0;
+}
+
+/* ========== 表格内数字输入框（QSpinBox/QDoubleSpinBox） ========== */
+QTableWidget QSpinBox,
+QTableWidget QDoubleSpinBox {
+    background-color: #ffffff;
+    border: 1px solid #d0d6e0;
+    border-radius: 3px;
+    padding: 4px 8px;
+    color: #333842;
+    font-size: 12px;
+    outline: none;
+    /*min-height: 28px;  适配单元格高度 */
+}
+/* 悬浮状态 */
+QTableWidget QSpinBox:hover,
+QTableWidget QDoubleSpinBox:hover {
+    border-color: #a0b3dc;
+}
+/* 聚焦状态 */
+QTableWidget QSpinBox:focus,
+QTableWidget QDoubleSpinBox:focus {
+    border-color: #1e6ceb;
+    box-shadow: 0 0 0 2px rgba(30, 108, 235, 0.1);
+}
+/* 上下箭头按钮 */
+QTableWidget QSpinBox::up-button,
+QTableWidget QDoubleSpinBox::up-button {
+    width: 20px;
+    border-left: 1px solid #e5e9f2;
+    background-color: #f8f9fc;
+}
+QTableWidget QSpinBox::down-button,
+QTableWidget QDoubleSpinBox::down-button {
+    width: 20px;
+    border-left: 1px solid #e5e9f2;
+    background-color: #f8f9fc;
+}
+/* 箭头图标 */
+QTableWidget QSpinBox::up-arrow,
+QTableWidget QDoubleSpinBox::up-arrow {
+    image: url(:/Ico/qrc/上拉.png);
+    width: 8px;
+    height: 8px;
+}
+QTableWidget QSpinBox::down-arrow,
+QTableWidget QDoubleSpinBox::down-arrow {
+    image: url(:/Ico/qrc/下拉.png);
+    width: 8px;
+    height: 8px;
+}
+
+
+QTableWidget QComboBox {
+	background - color: #ffffff;
+	border: 1px solid #d0d6e0;
+	border - radius: 3px;
+	padding: 4px 8px;
+	color: #333842;
+}
+
+QTableWidget QComboBox:hover {
+	border - color: #a0b3dc;
+}
+
+QTableWidget QComboBox::drop - down {
+	border - left: 1px solid #d0d6e0;
+	border - radius: 0 3px 3px 0;
+}
+
+QTableWidget QComboBox::down - arrow {
+	image: url(: / icons / arrow - down.svg); /* 可替换为自己的箭头图标 */
+	width: 12px;
+	height: 12px;
+}
+</string>
       </property>
      </widget>
     </widget>
@@ -114,6 +319,30 @@
      </item>
      <item>
       <widget class="QPushButton" name="pushButton_2">
+       <property name="styleSheet">
+        <string notr="true">/* 按钮样式 */
+QPushButton {
+    background-color: #1e6ceb;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 12px;
+}
+QPushButton:hover {
+    background-color: #1859c0;
+}
+QPushButton:pressed {
+    background-color: #134aa5;
+}
+QPushButton#cancelBtn { /* 取消按钮可单独设置 */
+    background-color: #f0f3f8;
+    color: #555a64;
+}
+QPushButton#cancelBtn:hover {
+    background-color: #e5e9f2;
+}</string>
+       </property>
        <property name="text">
         <string>确定</string>
        </property>
@@ -121,6 +350,30 @@
      </item>
      <item>
       <widget class="QPushButton" name="pushButton_3">
+       <property name="styleSheet">
+        <string notr="true">/* 按钮样式 */
+QPushButton {
+    background-color: #1e6ceb;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 12px;
+}
+QPushButton:hover {
+    background-color: #1859c0;
+}
+QPushButton:pressed {
+    background-color: #134aa5;
+}
+QPushButton#cancelBtn { /* 取消按钮可单独设置 */
+    background-color: #f0f3f8;
+    color: #555a64;
+}
+QPushButton#cancelBtn:hover {
+    background-color: #e5e9f2;
+}</string>
+       </property>
        <property name="text">
         <string>取消</string>
        </property>
@@ -128,6 +381,30 @@
      </item>
      <item>
       <widget class="QPushButton" name="pushButton">
+       <property name="styleSheet">
+        <string notr="true">/* 按钮样式 */
+QPushButton {
+    background-color: #1e6ceb;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 12px;
+}
+QPushButton:hover {
+    background-color: #1859c0;
+}
+QPushButton:pressed {
+    background-color: #134aa5;
+}
+QPushButton#cancelBtn { /* 取消按钮可单独设置 */
+    background-color: #f0f3f8;
+    color: #555a64;
+}
+QPushButton#cancelBtn:hover {
+    background-color: #e5e9f2;
+}</string>
+       </property>
        <property name="text">
         <string>应用</string>
        </property>
