@@ -23,8 +23,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="main.cpp">
-      <Filter>Source Files</Filter>
+    <QtMoc Include="HttpJsonSenderWidget.h">
+      <Filter>Header Files</Filter>
     </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HttpJsonSenderWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
