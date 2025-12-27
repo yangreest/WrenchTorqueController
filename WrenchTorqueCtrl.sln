@@ -5,8 +5,11 @@ VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WrenchTorqueCtrl", "WrenchTorqueCtrl\WrenchTorqueCtrl.vcxproj", "{A6F4C60C-D038-4C7E-88E7-59AE04E339D4}"
 EndProject
+<<<<<<< HEAD
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HttpJsonSender", "HttpJsonSender\HttpJsonSender.vcxproj", "{239F9376-59F2-4A13-8EB2-AE6100A7C99F}"
 EndProject
+=======
+>>>>>>> a0a3917b59e2dbc465eba3b1aa03b7b96d732435
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Release|x64 = Release|x64
@@ -14,8 +17,11 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A6F4C60C-D038-4C7E-88E7-59AE04E339D4}.Release|x64.ActiveCfg = Release|x64
 		{A6F4C60C-D038-4C7E-88E7-59AE04E339D4}.Release|x64.Build.0 = Release|x64
+<<<<<<< HEAD
 		{239F9376-59F2-4A13-8EB2-AE6100A7C99F}.Release|x64.ActiveCfg = Release|x64
 		{239F9376-59F2-4A13-8EB2-AE6100A7C99F}.Release|x64.Build.0 = Release|x64
+=======
+>>>>>>> a0a3917b59e2dbc465eba3b1aa03b7b96d732435
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
 #include "WrenchTorqueCtrl.h"
+<<<<<<< HEAD
 #include "XMLConfigManager/XmlManagerWindow.h"
 
 WrenchTorqueCtrl::WrenchTorqueCtrl(QWidget* parent)
@@ -26,4 +27,15 @@ void WrenchTorqueCtrl::on_actionSetting_triggered()
 	}
 	m_Window->show();
 }
+=======
+
+WrenchTorqueCtrl::WrenchTorqueCtrl(QWidget *parent)
+    : QMainWindow(parent)
+{
+    ui.setupUi(this);
+}
+
+WrenchTorqueCtrl::~WrenchTorqueCtrl()
+{}
+>>>>>>> a0a3917b59e2dbc465eba3b1aa03b7b96d732435
 
