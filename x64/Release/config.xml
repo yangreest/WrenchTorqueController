@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Config>
     <DeviceControlBoard name = "设备控制板">
-        <Ip name = "设备控制板" >127.0.0.1</Ip>
-        <Port>8234</Port>
+        <Ip name = "控制板IP地址" Description ="连接控制板Wifi的ip地址，一般情况是192.168.11.252" DataType="4" Range="">
+		127.0.0.1
+		</Ip>
+        <Port name = "控制板端口号" Description ="连接控制板的端口号，一般是8234" DataType="0" Range="">
+		8234
+		</Port>
         <!-- 心跳间隔单位ms -->
-        <DeviceHeartBeat>200</DeviceHeartBeat>
-        <FactoryMode>0</FactoryMode>
+        <DeviceHeartBeat name = "心跳间隔" Description ="控制板心跳间隔" DataType="0" Range="200-10000">200</DeviceHeartBeat>
+        <FactoryMode name = "工厂模式" Description ="控制板心跳间隔" DataType="2" Range="">0</FactoryMode>
         <!-- 向上时的舵机角度单位ms -->
-        <UpAngle>120</UpAngle>
+        <UpAngle name = "向上时的舵机角度" Description ="控制板心跳间隔" DataType="0" Range="200-10000">120</UpAngle>
         <!-- 向下时的舵机角度单位ms -->
-        <DownAngle>160</DownAngle>
+        <DownAngle name = "向下时的舵机角度" Description ="控制板心跳间隔" DataType="0" Range="200-10000">160</DownAngle>
         <!-- 行走电机速度 0 低速, 1 中速, 2 高速 -->
-        <WalkMotorSpeed>2</WalkMotorSpeed>
+        <WalkMotorSpeed name = "行走电机速度" Description ="控制板心跳间隔" DataType="5" Range="低速-中速-高速">2</WalkMotorSpeed>
     </DeviceControlBoard>
     <Camera>
-        <Left>192.168.1.11</Left>
-        <Mid>192.168.1.10</Mid>
-        <Right>192.168.1.10</Right>
+        <Left name = "左侧相机IP地址" Description ="左侧相机IP地址" DataType="4" Range="">192.168.1.11</Left>
+        <Mid name = "中间相机IP地址" Description ="左侧相机IP地址" DataType="4" Range="">192.168.1.10</Mid>
+        <Right name = "右侧相机IP地址" Description ="左侧相机IP地址" DataType="4" Range="">192.168.1.10</Right>
     </Camera>
 </Config>
