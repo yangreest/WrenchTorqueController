@@ -6,20 +6,61 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>400</height>
+    <width>880</width>
+    <height>630</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>WrenchTorqueCtrl</string>
   </property>
-  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTableWidget" name="tableWidget"/>
+    </item>
+    <item>
+     <widget class="QWidget" name="widget_2" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="spacing">
+        <number>2</number>
+       </property>
+       <property name="leftMargin">
+        <number>2</number>
+       </property>
+       <property name="topMargin">
+        <number>2</number>
+       </property>
+       <property name="rightMargin">
+        <number>2</number>
+       </property>
+       <property name="bottomMargin">
+        <number>2</number>
+       </property>
+       <item>
+        <widget class="QPushButton" name="sendBtn">
+         <property name="text">
+          <string>发送数据</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="statusLabel">
+         <property name="text">
+          <string>未发送请求</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>600</width>
+     <width>880</width>
      <height>20</height>
     </rect>
    </property>
@@ -28,6 +69,7 @@
      <string>开始</string>
     </property>
     <addaction name="actionSetting"/>
+    <addaction name="separator"/>
    </widget>
    <addaction name="menu"/>
   </widget>
@@ -58,7 +100,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-   <include location="WrenchTorqueCtrl.qrc"/>
+  <include location="WrenchTorqueCtrl.qrc"/>
  </resources>
  <connections/>
 </ui>

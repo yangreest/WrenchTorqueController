@@ -49,6 +49,12 @@
     <ClCompile Include="XMLConfigManager\XmlManagerWindow.cpp">
       <Filter>XmlConfigManager</Filter>
     </ClCompile>
+    <ClCompile Include="DeviceCom\IDeviceCom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeviceCom\TcpClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="XMLConfigManager\XmlManagerWindow.h">
@@ -64,6 +70,12 @@
   <ItemGroup>
     <ClInclude Include="XMLConfigManager\ConfigData.h">
       <Filter>XmlConfigManager</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceCom\IDeviceCom.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceCom\TcpClient.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

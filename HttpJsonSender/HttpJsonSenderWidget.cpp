@@ -69,6 +69,6 @@ void HttpJsonSenderWidget::sendJsonData()
 
 		// 释放资源
 		reply->deleteLater();
-		});
+	});
 
 }
