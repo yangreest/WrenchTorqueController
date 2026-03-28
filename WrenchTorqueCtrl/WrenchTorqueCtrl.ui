@@ -70,8 +70,20 @@
     </property>
     <addaction name="actionSetting"/>
     <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>操作</string>
+    </property>
+    <addaction name="actionGetData"/>
+    <addaction name="actionRecordNext"/>
+    <addaction name="separator"/>
+    <addaction name="actionSendData"/>
+    <addaction name="separator"/>
    </widget>
    <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -81,6 +93,9 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionSetting"/>
+   <addaction name="actionGetData"/>
+   <addaction name="actionRecordNext"/>
+   <addaction name="actionSendData"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionsetting">
@@ -95,6 +110,35 @@
    </property>
    <property name="text">
     <string>Setting</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionGetData">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::EditFind"/>
+   </property>
+   <property name="text">
+    <string>获取数据</string>
+   </property>
+  </action>
+  <action name="actionSendData">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentSend"/>
+   </property>
+   <property name="text">
+    <string>发送数据</string>
+   </property>
+  </action>
+  <action name="actionRecordNext">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::ListAdd"/>
+   </property>
+   <property name="text">
+    <string>记录下一条</string>
    </property>
   </action>
  </widget>

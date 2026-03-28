@@ -7,8 +7,12 @@
 #include <atomic>
 #include <condition_variable>
 #include <chrono>
+// 在文件开头
+#define NOMINMAX  // 如果使用Windows API
+#include <algorithm>
+#include <limits>
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 bool bWriteLog = true;
 #include <iostream>
 #include <sstream>
@@ -20,8 +24,12 @@ bool bWriteLog = true;
 
 CTcpClientCom::CTcpClientCom() : m_wTargetPort(0)
 {
-	m_function_ReadDataCallBack = nullptr;
 	m_connectCallback = nullptr;
+}
+
+CTcpClientCom::~CTcpClientCom()
+{
+	m_running = false; // 确保线程退出
 }
 
 void CTcpClientCom::SetParam(const char* pComName, int nComPort)
@@ -30,30 +38,9 @@ void CTcpClientCom::SetParam(const char* pComName, int nComPort)
 	m_wTargetPort = nComPort;
 }
 
-void CTcpClientCom::RegisterReadDataCallBack(const std::function<void(uint8_t*, int, uint64_t)>& f)
-{
-	m_function_ReadDataCallBack = f;
-}
-
 void CTcpClientCom::RegisterConnectStatusCallBack(const std::function<void(bool, int)>& f)
 {
 	m_connectCallback = f;
-}
-
-bool CTcpClientCom::Write(uint8_t* data, size_t  len)
-{
-	if (!m_running || !m_connected)
-	{
-		return false;
-	}
-
-	{
-		std::unique_lock<std::mutex> lock(m_sendQueueMutex);
-		m_sendQueue.emplace(data, data + len);
-		m_sendQueueCV.notify_one();
-	}
-
-	return true;
 }
 
 bool CTcpClientCom::BeginWork()
@@ -78,10 +65,10 @@ bool CTcpClientCom::BeginWork()
 	m_connectionThread = std::thread(&CTcpClientCom::ConnectionThread, this);
 
 	// 启动接收线程
-	m_receiveThread = std::thread(&CTcpClientCom::ReceiveThread, this);
+	//m_receiveThread = std::thread(&CTcpClientCom::ReceiveThread, this);
 
 	//启动发送线程
-	m_sendThread = std::thread(&CTcpClientCom::SendThread, this);
+	//m_sendThread = std::thread(&CTcpClientCom::SendThread, this);
 
 	return true;
 }
@@ -95,11 +82,7 @@ bool CTcpClientCom::EndWork()
 
 	m_running = false;
 
-	// 通知条件变量
-	{
-		std::unique_lock<std::mutex> lock(m_sendQueueMutex);
-		m_sendQueueCV.notify_all();
-	}
+	
 
 	// 关闭套接字
 	CloseSocket();
@@ -108,11 +91,6 @@ bool CTcpClientCom::EndWork()
 	if (m_connectionThread.joinable())
 	{
 		m_connectionThread.join();
-	}
-
-	if (m_receiveThread.joinable())
-	{
-		m_receiveThread.join();
 	}
 
 	// 清理Winsock
@@ -216,8 +194,6 @@ void CTcpClientCom::Connect()
 						if (errorCode == 0)
 						{
 							SetConnected(true);
-							// 启动发送线程
-							//m_sendThread = std::thread(&CTcpClientCom::SendThread, this);
 							return;
 						}
 					}
@@ -228,155 +204,139 @@ void CTcpClientCom::Connect()
 	else
 	{
 		SetConnected(true);
-		// 启动发送线程
-		//m_sendThread = std::thread(&CTcpClientCom::SendThread, this);
 	}
 
 	CloseSocket();
 }
 
-void CTcpClientCom::SendThread()
+bool CTcpClientCom::SyncWrite(const uint8_t* sendData, size_t sendLen,
+	uint8_t* receiveBuffer, size_t bufferSize,
+	size_t& receivedLen, int timeoutMs)
 {
-	while (m_running)
+	if (!m_connected || !sendData || !receiveBuffer || sendLen == 0)
+		return false;
+
+	std::cout << "SyncWrite \n" << std::endl;
+	
+	// 发送数据
+	std::vector<uint8_t> dataVec(sendData, sendData + sendLen);
 	{
-		if (!m_connected)
-		{
-			Sleep(10);
-			continue;
-		}
-		std::vector<uint8_t> data;
-
-		// 等待数据或连接关闭
-		{
-			std::unique_lock<std::mutex> lock(m_sendQueueMutex);
-			m_sendQueueCV.wait(lock, [this] { return !m_sendQueue.empty() || !m_connected || !m_running; });
-			if (!m_connected || !m_running || m_sendQueue.empty())
-			{
-				Sleep(10);
-				continue;
-			}
-
-			data = std::move(m_sendQueue.front());
-			m_sendQueue.pop();
-		}
-
-		// 发送数据
-		if (!data.empty() && m_connected)
-		{
-			auto bytesSent = send(m_socket, (char*)data.data(), (int)data.size(), 0);
+		auto bytesSent = send(m_socket, reinterpret_cast<const char*>(dataVec.data()), dataVec.size(), 0);
 #ifdef _DEBUG
-			if (bWriteLog)
-			{
-				auto toHexString = [](const uint8_t* t, size_t  len)
-					{
-						std::ostringstream oss;
-						oss << std::hex << std::setfill('0');
-						for (int i = 0; i < len; ++i)
-						{
-							oss << std::setw(2) << static_cast<int>(t[i]);
-							if (i < len - 1) oss << ' ';
-						}
-						return oss.str();
-					};
-				std::cout << "send data:" << toHexString(data.data(), data.size()) << std::endl;
-			}
-#endif
-			if (bytesSent == SOCKET_ERROR)
-			{
-				int error = WSAGetLastError();
-				if (error != WSAEWOULDBLOCK && error != WSAEINTR)
-				{
-					SetConnected(false);
-					break;
-				}
-			}
-		}
-		else
+		if (bWriteLog)
 		{
-			Sleep(10);
+			auto toHexString = [](const uint8_t* t, size_t  len)
+				{
+					std::ostringstream oss;
+					oss << std::hex << std::setfill('0');
+					for (int i = 0; i < len; ++i)
+					{
+						oss << std::setw(2) << static_cast<int>(t[i]);
+						if (i < len - 1) oss << ' ';
+					}
+					return oss.str();
+				};
+			std::cout << "send data:" << toHexString(data.data(), data.size()) << std::endl;
+		}
+#endif
+		if (bytesSent == SOCKET_ERROR)
+		{
+			int error = WSAGetLastError();
+			if (error != WSAEWOULDBLOCK && error != WSAEINTR)
+			{
+				SetConnected(false);
+				return false;
+			}
 		}
 	}
+
+	// 等待响应
+	bool result = WaitForSyncResponse(receiveBuffer, bufferSize, receivedLen, timeoutMs);
+
+	return result;
 }
 
-// 接收线程函数
-void CTcpClientCom::ReceiveThread()
+
+bool CTcpClientCom::WaitForSyncResponse(uint8_t* buffer_t, size_t bufferSize,
+	size_t& receivedLen, int timeoutMs)
 {
-	while (m_running)
+	auto startTime = std::chrono::steady_clock::now();
+
+	while (m_running && m_connected)
 	{
-		if (m_connected)
+
+		char buffer[4096];
+		fd_set readSet;
+		timeval timeout;
+
+		FD_ZERO(&readSet);
+		FD_SET(m_socket, &readSet);
+		timeout.tv_sec = 1; // 1秒超时
+		timeout.tv_usec = 0;
+
+		// 使用select检查是否有数据可读
+		int result = select(0, &readSet, nullptr, nullptr, &timeout);
+		if (result > 0)
 		{
-			char buffer[1024];
-			fd_set readSet;
-			timeval timeout;
-
-			FD_ZERO(&readSet);
-			FD_SET(m_socket, &readSet);
-			timeout.tv_sec = 1; // 1秒超时
-			timeout.tv_usec = 0;
-
-			// 使用select检查是否有数据可读
-			int result = select(0, &readSet, nullptr, nullptr, &timeout);
-			if (result > 0)
+			if (FD_ISSET(m_socket, &readSet))
 			{
-				if (FD_ISSET(m_socket, &readSet))
+				int bytesReceived = recv(m_socket, buffer, sizeof(buffer) - 1, 0);
+				if (bytesReceived > 0)
 				{
-					int bytesReceived = recv(m_socket, buffer, sizeof(buffer) - 1, 0);
-					if (bytesReceived > 0)
-					{
-						if (m_function_ReadDataCallBack != nullptr)
-						{
-							m_function_ReadDataCallBack((uint8_t*)buffer, bytesReceived, 0);
-						}
-
 #ifdef _DEBUG
-						if (bWriteLog)
-						{
-							auto toHexString = [](const uint8_t* t, int len)
+					if (bWriteLog)
+					{
+						auto toHexString = [](const uint8_t* t, int len)
+							{
+								std::ostringstream oss;
+								oss << std::hex << std::setfill('0');
+								for (int i = 0; i < len; ++i)
 								{
-									std::ostringstream oss;
-									oss << std::hex << std::setfill('0');
-									for (int i = 0; i < len; ++i)
-									{
-										oss << std::setw(2) << static_cast<int>(t[i]);
-										if (i < len - 1) oss << ' ';
-									}
-									return oss.str();
-								};
-							std::cout << "get data:" << toHexString((uint8_t*)buffer, bytesReceived) << std::endl;
-						}
+									oss << std::setw(2) << static_cast<int>(t[i]);
+									if (i < len - 1) oss << ' ';
+								}
+								return oss.str();
+							};
+						std::cout << "get data:" << toHexString((uint8_t*)buffer, bytesReceived) << std::endl;
+					}
 #endif
-					}
-					else if (bytesReceived == 0)
+                memcpy(buffer_t, buffer, bytesReceived);
+                receivedLen = bytesReceived;
+
+				return true;
+				}
+				else if (bytesReceived == 0)
+				{
+					// 连接关闭
+					SetConnected(false);
+				}
+				else
+				{
+					// 接收错误
+					int error = WSAGetLastError();
+					if (error != WSAEWOULDBLOCK && error != WSAEINTR)
 					{
-						// 连接关闭
 						SetConnected(false);
-					}
-					else
-					{
-						// 接收错误
-						int error = WSAGetLastError();
-						if (error != WSAEWOULDBLOCK && error != WSAEINTR)
-						{
-							SetConnected(false);
-						}
 					}
 				}
 			}
-			else if (result == 0)
-			{
-				// 超时，继续循环
-			}
-			else
-			{
-				// select错误
-				int error = WSAGetLastError();
-				SetConnected(false);
-			}
+		}
+		else if (result == 0)
+		{
+			// 检查是否超时
+			auto currentTime = std::chrono::steady_clock::now();
+			auto elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(
+				currentTime - startTime).count();
+
+			if (elapsedMs >= timeoutMs)
+				break;
 		}
 		else
 		{
-			// 未连接，等待
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			// select错误
+			int error = WSAGetLastError();
+			SetConnected(false);
 		}
 	}
+	return false;
 }

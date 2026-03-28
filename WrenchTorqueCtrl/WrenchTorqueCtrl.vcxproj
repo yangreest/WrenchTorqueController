@@ -41,6 +41,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -51,14 +59,13 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DeviceCom\IDeviceCom.cpp" />
     <ClCompile Include="DeviceCom\TcpClient.cpp" />
     <ClCompile Include="XMLConfigManager\ConfigManager.cpp" />
     <ClCompile Include="XMLConfigManager\XmlManagerWindow.cpp" />
@@ -70,7 +77,6 @@
     <QtUic Include="XmlConfigManager.ui" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DeviceCom\IDeviceCom.h" />
     <ClInclude Include="DeviceCom\TcpClient.h" />
     <ClInclude Include="XMLConfigManager\ConfigData.h" />
     <QtMoc Include="XMLConfigManager\XmlManagerWindow.h" />

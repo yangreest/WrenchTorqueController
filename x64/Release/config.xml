@@ -18,4 +18,11 @@
         <Mid Name = "中间相机IP地址" Description ="左侧相机IP地址" DataType="4" Range="">192.168.1.10</Mid>
         <Right Name = "右侧相机IP地址" Description ="左侧相机IP地址" DataType="4" Range="">192.168.1.10</Right>
     </Camera>
+	<Wrench>
+		<Ip Name = "力矩扳手的ip地址" Description ="力矩扳手的ip地址" DataType="4" Range="">192.168.1.135</Ip>
+		<Port Name = "力矩扳手端口号" Description ="力矩扳手的端口号，一般是8234" DataType="0" Range="0-99999">8234</Port>
+		<AutoSearch Name = "是否是自动刷新数据" Description ="自动识别更改并更新到软件界面上" DataType="2" Range="">1</AutoSearch>
+		<LastItem Name = "获取测试数据的个数" Description ="一次性获取数据的个数，显示在界面上" DataType="0" Range="0-1000">10</LastItem>
+		<Url Name = "上报服务器地址" Description ="上报服务器链接" DataType="3" Range="0-1000">http://125.46.39.205:8088/wrench/tower/receiveData</Url>
+	</Wrench>
 </Config>

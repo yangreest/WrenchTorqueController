@@ -27,6 +27,12 @@ ConfigManager::ConfigManager(QObject* parent) : QObject(parent)
 	m_parsedConfigData.camera.mid = "192.168.1.10";
 	m_parsedConfigData.camera.right = "192.168.1.10";
 
+	m_parsedConfigData.wrench.ip = "192.168.1.135";
+    m_parsedConfigData.wrench.port = 8234;
+	m_parsedConfigData.wrench.autoSearch = true;
+	m_parsedConfigData.wrench.lastItem = 10;
+    m_parsedConfigData.wrench.url = "http://192.168.1.135:8080/api/wrench/";
+
 	//获取绝对路径
     QString appPath = QCoreApplication::applicationDirPath();
 	QString configFilePath = appPath+ "\\config.xml";
@@ -128,6 +134,27 @@ void ConfigManager::parseConfig()
         m_configData["Camera"]["Right"] = m_cfgItem;
         m_parsedConfigData.camera.right = m_cfgItem.m_strValue;
 	}
+
+    // 解析Wrench配置
+    QDomElement wrenchElement = root.firstChildElement("Wrench");
+    if (!wrenchElement.isNull())
+    {
+        m_cfgItem.m_strValue = getElementValue(wrenchElement, "Ip", m_cfgItem, "192.168.1.135");
+        m_configData["Wrench"]["Ip"] = m_cfgItem;
+        m_parsedConfigData.wrench.ip = m_cfgItem.m_strValue;
+        m_cfgItem.m_strValue = getElementValue(wrenchElement, "Port", m_cfgItem, "8234");
+        m_configData["Wrench"]["Port"] = m_cfgItem;
+        m_parsedConfigData.wrench.port = m_cfgItem.m_strValue.toInt();
+        m_cfgItem.m_strValue = getElementValue(wrenchElement, "AutoSearch", m_cfgItem, "true");
+        m_configData["Wrench"]["AutoSearch"] = m_cfgItem;
+        m_parsedConfigData.wrench.autoSearch = m_cfgItem.m_strValue.toInt();
+        m_cfgItem.m_strValue = getElementValue(wrenchElement, "LastItem", m_cfgItem, "10");
+        m_configData["Wrench"]["LastItem"] = m_cfgItem;
+        m_parsedConfigData.wrench.lastItem = m_cfgItem.m_strValue.toInt();
+        m_cfgItem.m_strValue = getElementValue(wrenchElement, "Url", m_cfgItem, "http://192.168.1.135:8080/api/wrench/");
+        m_configData["Wrench"]["Url"] = m_cfgItem;
+        m_parsedConfigData.wrench.url = m_cfgItem.m_strValue;
+    }
 }
 
 QString ConfigManager::getElementValue(const QDomElement& parentElement, const QString& tagName, ConfigDataItem& cfgItem, const QString& defaultValue)

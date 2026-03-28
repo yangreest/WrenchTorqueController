@@ -42,6 +42,9 @@ void XmlManagerWindow::initUI()
 
 void XmlManagerWindow::initTable(ConfigDataMap mm)
 {
+	// 设置表格可编辑
+	ui.tableWidget->setEditTriggers(QAbstractItemView::AllEditTriggers);
+
 	// 表格分两列 ，第一列是参数名，第二列是参数值
 	ui.tableWidget->setColumnCount(2);
 	ui.tableWidget->setHorizontalHeaderLabels(QStringList() << "参数名" << "参数值");
@@ -63,10 +66,35 @@ void XmlManagerWindow::initTable(ConfigDataMap mm)
 		{
 		case ConfigDataItem::DataType::eBool:
 		{
-			QCheckBox* ckBox = new QCheckBox(ui.tableWidget);
-			ckBox->setEnabled(true);
-			ckBox->setChecked(it->second.m_strValue.toInt() == 0 ? true : false);
-			ui.tableWidget->setCellWidget(row, 1, ckBox);
+			/*QTableWidgetItem* item = new QTableWidgetItem();
+			item->setCheckState(it->second.m_strValue.toInt() != 0 ? Qt::CheckState::Checked:Qt::CheckState::Unchecked);
+			ui.tableWidget->setItem(row, 1, item);*/
+			// 清除当前行的控件
+   //         ui.tableWidget->removeCellWidget(row, 1);
+			//QTableWidgetItem* checkBox = new QTableWidgetItem();
+			//checkBox->setCheckState(it->second.m_strValue.toInt() != 0 ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
+			//ui.tableWidget->setItem(row, 1, checkBox);
+			QCheckBox* checkBox = new QCheckBox(ui.tableWidget);
+			// ✅ 核心修复1：设置表格为父对象（必须）
+			checkBox->setParent(ui.tableWidget);
+			checkBox->setChecked(it->second.m_strValue.toInt() != 0);
+			// ✅ 核心修复2：允许勾选框接收鼠标和焦点
+			checkBox->setFocusPolicy(Qt::StrongFocus);
+			checkBox->setMouseTracking(true); // 跟踪鼠标
+			// 让勾选框在单元格居中（非常重要，否则点击位置偏移）
+			QWidget* container = new QWidget();
+			QHBoxLayout* hLayout = new QHBoxLayout(container);
+			hLayout->addWidget(checkBox, 0, Qt::AlignCenter);
+			hLayout->setContentsMargins(0, 0, 0, 0); // 消除边距
+			ui.tableWidget->setCellWidget(row, 1, container);
+
+			// 可选：绑定信号，测试点击是否生效
+			QObject::connect(checkBox, &QCheckBox::clicked, [=](bool checked) {
+				checkBox->setChecked(checked);  // 强制同步状态
+				checkBox->update();             // 强制刷新控件视觉
+				checkBox->repaint();            // 立即重绘
+				qDebug() << "行" << row << "勾选状态：" << checked;
+				});
 			break;
 		}
 		case ConfigDataItem::DataType::eInt:

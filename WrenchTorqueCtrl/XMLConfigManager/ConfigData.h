@@ -28,12 +28,25 @@ struct CameraConfig
 };
 
 /**
+ * @brief 舵机配置结构体
+ */
+struct WrenchConfig
+{
+	QString ip;
+	int port;
+	bool autoSearch;	// 是否自动搜索
+	int lastItem;		// 最新的项目数量
+	QString url;		// 上报的环境地址
+};
+
+/**
  * @brief 整体配置数据结构体
  */
 struct ConfigData
 {
 	DeviceControlBoardConfig deviceControlBoard;  // 设备控制板配置
 	CameraConfig camera;                          // 相机配置
+	WrenchConfig  wrench;							// 力矩传感器配置
 };
 
 class ConfigDataItem

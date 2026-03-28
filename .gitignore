@@ -7,3 +7,7 @@
 /WrenchTorqueCtrl/x64/Release
 /HttpJsonSender/x64/Release
 /.vs
+/x64/Release
+/x64/Release/WrenchTorqueCtrl.pdb
+/x64/Release/HttpJsonSender.exe
+/x64/WrenchTorqueController
