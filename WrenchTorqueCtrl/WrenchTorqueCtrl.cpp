@@ -42,7 +42,7 @@ void WrenchTorqueCtrl::InitUI()
 
 	m_pTimer = new QTimer(this);
 	connect(m_pTimer, &QTimer::timeout, this, &WrenchTorqueCtrl::on_timer_timeout);
-	m_pTimer->start(10000);
+	m_pTimer->start(1000);
 }
 
 void WrenchTorqueCtrl::InitParams()
@@ -52,7 +52,6 @@ void WrenchTorqueCtrl::InitParams()
 	m_pComDevice = new CTcpClientCom();
 
 	m_pComDevice->SetParam(ConfigManager::getInstance()->getConfigData().wrench.ip.toStdString().c_str(), ConfigManager::getInstance()->getConfigData().wrench.port);
-	//m_pComDevice->RegisterReadDataCallBack(std::bind(&WrenchTorqueCtrl::ReceiveNewData, this, std::placeholders::_1, std::placeholders::_2));
 	m_pComDevice->RegisterConnectStatusCallBack(std::bind(&WrenchTorqueCtrl::ComDeviceConnectionChanged, this, std::placeholders::_1, std::placeholders::_2, 0));
 	m_pComDevice->BeginWork();
 
@@ -71,23 +70,6 @@ QTableWidgetItem* WrenchTorqueCtrl::initCheckboxColumn()
 	return checkboxItem;
 }
 
-void WrenchTorqueCtrl::ReceiveNewData(const uint8_t* p, int len)
-{
-	//1、先将数据添加至缓冲区最尾部
-	auto oldSize = m_vectorDataBuffer.size();
-	m_vectorDataBuffer.resize(oldSize + len);
-	memcpy(m_vectorDataBuffer.data() + oldSize, p, len);
-	try
-	{
-		ProtocolData result = parse_protocol_data(m_vectorDataBuffer);
-		add_json_data_to_table(result.json_data);
-	}
-	catch (std::exception& e)
-	{
-		qWarning() << "解析数据失败：" << e.what();
-		return;
-	}
-}
 
 void WrenchTorqueCtrl::ComDeviceConnectionChanged(const bool connected, int guid, int index)
 {
@@ -235,6 +217,64 @@ void WrenchTorqueCtrl::readHistoryData(int index)
     loop.exec();
 }
 
+void WrenchTorqueCtrl::readHistoryData_onTimer(int index)
+{
+	// 使用QtConcurrent异步执行
+	// 使用 QEventLoop 等待异步操作完成
+	QEventLoop loop;
+	bool operationCompleted = false;
+	QtConcurrent::run([this, index, &loop, &operationCompleted]() {
+		for (int i = history_data_number - index; i <= history_data_number; i++) {
+			// 准备发送数据
+			//uint8_t sendBuffer[] = { 0x54, 0x57, 0x0C , 0x01 , 0x00 , 0x00 , 0x00 , 0x00 , 0x00 , 0xEF };  // 示例数据
+			//size_t sendLen = sizeof(sendBuffer);
+
+			// 创建一个JSON数据
+			QJsonObject jsonObj;
+			jsonObj.insert("history_data_index", i);
+			//转成字符串
+			QString jsonStr = QJsonDocument(jsonObj).toJson(QJsonDocument::Compact);
+
+			std::vector< uint8_t> sendVector = packProtocolData(0x0C, 0x02, jsonStr.toStdString());
+
+			uint8_t* sendBuffer = sendVector.data();
+			size_t sendLen = sendVector.size();
+
+
+			// 准备接收缓冲区
+			uint8_t receiveBuffer[1024];
+			size_t receivedLen = 0;
+
+			// 测试同步写入
+			bool success = m_pComDevice->SyncWrite(sendBuffer, sendLen,
+				receiveBuffer, sizeof(receiveBuffer),
+				receivedLen, 5000);  // 5秒超时
+
+			// 在主线程中更新UI
+			QMetaObject::invokeMethod(this, [this, success, receiveBuffer, receivedLen, &loop, &operationCompleted]() {
+				if (success) {
+					qDebug() << "接收到数据：" << receivedLen << " 字节数据：";
+
+					// receiveBuffer 到 m_vectorDataBuffer
+					m_vectorDataBuffer.resize(receivedLen);
+					memcpy(m_vectorDataBuffer.data(), receiveBuffer, receivedLen);
+
+					ProtocolData result = parse_protocol_data(m_vectorDataBuffer);
+					if (result.sub_func_code == 0x02)
+					{
+						add_json_data_to_table_onTimer(result.json_data);
+					}
+				}
+				else {
+					qDebug() << "同步发送失败或超时";
+				}
+				});
+		}
+		operationCompleted = true;
+		loop.quit(); // 退出事件循环
+		});
+	loop.exec();
+}
 void WrenchTorqueCtrl::sendLatestData()
 {
 
@@ -460,8 +500,8 @@ void WrenchTorqueCtrl::on_timer_timeout()
      if (History > history_data_number) {
 		 history_data_number = History;
 		// 读取最新的一个数据并保存到表格中
-		 readHistoryData(0);
-		 sendJsonData1();
+		 readHistoryData_onTimer(0);
+		 
 	}
 }
 
@@ -614,6 +654,80 @@ void WrenchTorqueCtrl::add_json_data_to_table(QString json_data)
 	ui.tableWidget->setItem(0, 1, new QTableWidgetItem(QString::number(history_data_index)));
 	ui.tableWidget->setItem(0, 3, new QTableWidgetItem(QString::number(torque)));
 	ui.tableWidget->setItem(0, 4, new QTableWidgetItem(QString::number(angle)));
+}
+
+void WrenchTorqueCtrl::add_json_data_to_table_onTimer(QString json_data)
+{
+	// 添加第一行
+	ui.tableWidget->insertRow(0);
+	// 解析JSON数据
+	QJsonDocument json_doc = QJsonDocument::fromJson(json_data.toUtf8());
+	QJsonObject json_obj = json_doc.object();
+	int history_data_index = json_obj["history_data_index"].toInt();
+	double torque = json_obj["torque"].toDouble();
+	double angle = json_obj["angle"].toDouble();
+
+	ui.tableWidget->setItem(0, 0, initCheckboxColumn());
+	ui.tableWidget->setItem(0, 1, new QTableWidgetItem(QString::number(history_data_index)));
+	ui.tableWidget->setItem(0, 3, new QTableWidgetItem(QString::number(torque)));
+	ui.tableWidget->setItem(0, 4, new QTableWidgetItem(QString::number(angle)));
+
+	ui.statusLabel->setText("正在发送请求...");
+
+	// 1. 配置请求信息
+	const QString targetUrl = ConfigManager::getInstance()->getConfigData().wrench.url;// "http://125.46.39.205:8088/wrench/tower/receiveData";
+	QNetworkRequest request;
+	request.setUrl(QUrl(targetUrl));
+	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json;charset=utf-8");
+	request.setTransferTimeout(5000); // 设置传输超时为5秒
+	// 构建单行数据的JSON
+	QJsonObject jsonObj;
+	int row = 0;
+	// 获取各列的数据
+	QTableWidgetItem* idItem = ui.tableWidget->item(row, 1); // 序号
+	QTableWidgetItem* timeItem = ui.tableWidget->item(row, 2); // 时间
+	QTableWidgetItem* torqueItem = ui.tableWidget->item(row, 3); // 扭矩
+	QTableWidgetItem* angleItem = ui.tableWidget->item(row, 4); // 角度
+	QTableWidgetItem* zAxisItem = ui.tableWidget->item(row, 5); // Z轴
+
+	// 添加到JSON对象
+
+	jsonObj.insert("torque",QString::number(torque));
+	jsonObj.insert("angle", QString::number(angle));
+	jsonObj.insert("z_axis", "");
+
+	// 序列化JSON
+	QJsonDocument jsonDoc(jsonObj);
+	QByteArray postData = jsonDoc.toJson(QJsonDocument::Compact);
+	qDebug() << "待发送的JSON数据：" << QString(postData);
+
+	// 发送POST请求
+	QNetworkReply* reply = networkManager->post(request, postData);
+
+	// 绑定响应处理信号
+	connect(reply, &QNetworkReply::finished, this, [this, reply]() {
+
+		if (reply->error() == QNetworkReply::NoError) {
+			// 请求成功
+			QByteArray responseData = reply->readAll();
+			int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+			qDebug() << "请求成功！服务端响应：" << QString(responseData);
+			qDebug() << "HTTP状态码：" << statusCode;
+			ui.statusLabel->setText(QString("请求成功！HTTP状态码：%1").arg(statusCode));
+		}
+		else {
+			// 请求失败
+			QString errorMsg = reply->errorString();
+			int errorCode = (int)reply->error();
+			int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+			qDebug() << "请求失败！错误信息：" << errorMsg;
+			qDebug() << "错误代码：" << errorCode;
+			qDebug() << "HTTP状态码：" << statusCode;
+			ui.statusLabel->setText(QString("请求失败！错误信息：%1").arg(errorMsg));
+		}
+		// 释放资源
+		reply->deleteLater();
+		});
 }
 
 int WrenchTorqueCtrl::add_json_data_to_counter(QString json_data)

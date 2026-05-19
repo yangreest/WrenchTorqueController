@@ -56,8 +56,6 @@ public:
 	void InitParams();
 
 	QTableWidgetItem* initCheckboxColumn();
-
-	void ReceiveNewData(const uint8_t* p, int len);
 	void ComDeviceConnectionChanged(const bool connected, int guid, int index);
 
 	uint8_t calculate_checksum(const std::vector<uint8_t>& payload);
@@ -65,6 +63,7 @@ public:
 	std::vector<uint8_t> packProtocolData(uint8_t mainFunc, uint8_t subFunc, const std::string& jsonStr);
 
 	void add_json_data_to_table(QString json_data); // 添加JSON数据到表格
+	void add_json_data_to_table_onTimer(QString json_data); // 添加JSON数据到表格
 	int add_json_data_to_counter(QString json_data);// 添加JSON数据到计数器
 
 private slots:
@@ -76,6 +75,7 @@ private slots:
 	int GetHistoryDataNumber();
 	// 异步读取每一项历史数据
     void readHistoryData(int index);
+    void readHistoryData_onTimer(int index);
 	// 发送最新一行数据
     void sendLatestData();
 
